@@ -1,0 +1,596 @@
+2019-06-15 11:04:32.721 -03,"postgres","postgres",2919,"::1:55230",5d04faf0.b67,10,"idle",2019-06-15 11:04:32 -03,2/173,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'sistemas-nti' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:32.723 -03,"postgres","postgres",2919,"::1:55230",5d04faf0.b67,11,"idle",2019-06-15 11:04:32 -03,2/174,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'sistemas-nti' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.356 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,1,"idle",2019-06-15 11:04:33 -03,2/176,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.356 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,2,"idle",2019-06-15 11:04:33 -03,2/177,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.356 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,3,"idle",2019-06-15 11:04:33 -03,2/178,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.357 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,4,"idle",2019-06-15 11:04:33 -03,2/179,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.357 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,5,"idle",2019-06-15 11:04:33 -03,2/180,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.357 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,6,"idle",2019-06-15 11:04:33 -03,2/181,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.358 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,7,"idle",2019-06-15 11:04:33 -03,2/182,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.358 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,8,"idle",2019-06-15 11:04:33 -03,2/183,0,LOG,00000,"statement: INSERT INTO ""public"".""sistemas-nti"" (""t1"",""t2"")
+					VALUES (nextval('""sistemas-nti_t1_seq""'::regclass),nextval('""sistemas-nti_t2_seq""'::regclass))",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.360 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,9,"idle",2019-06-15 11:04:33 -03,2/184,0,LOG,00000,"statement: 
+				SELECT
+					a.attname, a.attnum,
+					pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
+					a.atttypmod,
+					a.attnotnull, a.atthasdef, pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) as adsrc,
+					a.attstattarget, a.attstorage, t.typstorage,
+					(
+						SELECT 1 FROM pg_catalog.pg_depend pd, pg_catalog.pg_class pc
+						WHERE pd.objid=pc.oid
+						AND pd.classid=pc.tableoid
+						AND pd.refclassid=pc.tableoid
+						AND pd.refobjid=a.attrelid
+						AND pd.refobjsubid=a.attnum
+						AND pd.deptype='i'
+						AND pc.relkind='S'
+					) IS NOT NULL AS attisserial,
+					pg_catalog.col_description(a.attrelid, a.attnum) AS comment
+				FROM
+					pg_catalog.pg_attribute a LEFT JOIN pg_catalog.pg_attrdef adef
+					ON a.attrelid=adef.adrelid
+					AND a.attnum=adef.adnum
+					LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
+				WHERE
+					a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='sistemas-nti'
+						AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+						nspname = 'public'))
+					AND a.attnum > 0 AND NOT a.attisdropped
+				ORDER BY a.attnum",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.364 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,10,"idle",2019-06-15 11:04:33 -03,2/185,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'sistemas-nti' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:33.366 -03,"postgres","postgres",2920,"::1:55232",5d04faf1.b68,11,"idle",2019-06-15 11:04:33 -03,2/186,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'sistemas-nti' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.324 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,1,"idle",2019-06-15 11:04:34 -03,2/188,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.324 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,2,"idle",2019-06-15 11:04:34 -03,2/189,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.325 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,3,"idle",2019-06-15 11:04:34 -03,2/190,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.326 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,4,"idle",2019-06-15 11:04:34 -03,2/191,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.326 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,5,"idle",2019-06-15 11:04:34 -03,2/192,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.326 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,6,"idle",2019-06-15 11:04:34 -03,2/193,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.326 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,7,"idle",2019-06-15 11:04:34 -03,2/194,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.327 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,8,"idle",2019-06-15 11:04:34 -03,2/195,0,LOG,00000,"statement: INSERT INTO ""public"".""sistemas-nti"" (""t1"",""t2"")
+					VALUES (nextval('""sistemas-nti_t1_seq""'::regclass),nextval('""sistemas-nti_t2_seq""'::regclass))",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.328 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,9,"idle",2019-06-15 11:04:34 -03,2/196,0,LOG,00000,"statement: 
+				SELECT
+					a.attname, a.attnum,
+					pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
+					a.atttypmod,
+					a.attnotnull, a.atthasdef, pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) as adsrc,
+					a.attstattarget, a.attstorage, t.typstorage,
+					(
+						SELECT 1 FROM pg_catalog.pg_depend pd, pg_catalog.pg_class pc
+						WHERE pd.objid=pc.oid
+						AND pd.classid=pc.tableoid
+						AND pd.refclassid=pc.tableoid
+						AND pd.refobjid=a.attrelid
+						AND pd.refobjsubid=a.attnum
+						AND pd.deptype='i'
+						AND pc.relkind='S'
+					) IS NOT NULL AS attisserial,
+					pg_catalog.col_description(a.attrelid, a.attnum) AS comment
+				FROM
+					pg_catalog.pg_attribute a LEFT JOIN pg_catalog.pg_attrdef adef
+					ON a.attrelid=adef.adrelid
+					AND a.attnum=adef.adnum
+					LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
+				WHERE
+					a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='sistemas-nti'
+						AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+						nspname = 'public'))
+					AND a.attnum > 0 AND NOT a.attisdropped
+				ORDER BY a.attnum",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.332 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,10,"idle",2019-06-15 11:04:34 -03,2/197,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'sistemas-nti' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:34.333 -03,"postgres","postgres",2923,"::1:55234",5d04faf2.b6b,11,"idle",2019-06-15 11:04:34 -03,2/198,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'sistemas-nti' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.674 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,1,"idle",2019-06-15 11:04:36 -03,2/200,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.675 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,2,"idle",2019-06-15 11:04:36 -03,2/201,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.675 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,3,"idle",2019-06-15 11:04:36 -03,2/202,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.676 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,4,"idle",2019-06-15 11:04:36 -03,2/203,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.676 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,5,"idle",2019-06-15 11:04:36 -03,2/204,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.676 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,6,"idle",2019-06-15 11:04:36 -03,2/205,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.677 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,7,"idle",2019-06-15 11:04:36 -03,2/206,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:36.677 -03,"postgres","postgres",2924,"::1:55236",5d04faf4.b6c,8,"idle",2019-06-15 11:04:36 -03,2/207,0,LOG,00000,"statement: SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+						reltuples::bigint,
+						(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
+					FROM pg_catalog.pg_class c
+					LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+					WHERE c.relkind = 'r'
+					AND nspname='public'
+					ORDER BY c.relname",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.026 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,1,"idle",2019-06-15 11:04:39 -03,2/209,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.026 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,2,"idle",2019-06-15 11:04:39 -03,2/210,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.026 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,3,"idle",2019-06-15 11:04:39 -03,2/211,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.027 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,4,"idle",2019-06-15 11:04:39 -03,2/212,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.028 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,5,"idle",2019-06-15 11:04:39 -03,2/213,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.028 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,6,"idle",2019-06-15 11:04:39 -03,2/214,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.028 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,7,"idle",2019-06-15 11:04:39 -03,2/215,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.028 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,8,"idle",2019-06-15 11:04:39 -03,2/216,0,LOG,00000,"statement: begin ",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.029 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,9,"idle in transaction",2019-06-15 11:04:39 -03,2/216,0,LOG,00000,"statement: 
+			SELECT indrelid, indkey
+			FROM pg_catalog.pg_index
+			WHERE indisunique AND indrelid=(
+				SELECT oid FROM pg_catalog.pg_class
+				WHERE relname='sistemas-nti' AND relnamespace=(
+					SELECT oid FROM pg_catalog.pg_namespace
+					WHERE nspname='public'
+				)
+			) AND indpred IS NULL AND indexprs IS NULL
+			ORDER BY indisprimary DESC LIMIT 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.030 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,10,"idle in transaction",2019-06-15 11:04:39 -03,2/216,0,LOG,00000,"statement: SELECT relhasoids FROM pg_catalog.pg_class WHERE relname='sistemas-nti'
+			AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='public')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.031 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,11,"idle in transaction",2019-06-15 11:04:39 -03,2/216,0,LOG,00000,"statement: commit",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.031 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,12,"idle",2019-06-15 11:04:39 -03,2/217,0,LOG,00000,"statement: SELECT relhasoids FROM pg_catalog.pg_class WHERE relname='sistemas-nti'
+			AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='public')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.031 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,13,"idle",2019-06-15 11:04:39 -03,2/218,0,LOG,00000,"statement: begin ",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.031 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,14,"idle in transaction",2019-06-15 11:04:39 -03,2/218,0,LOG,00000,"statement: SET TRANSACTION READ ONLY",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.032 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,15,"idle in transaction",2019-06-15 11:04:39 -03,2/218,0,LOG,00000,"statement: SELECT COUNT(*) AS total FROM (SELECT * FROM ""public"".""sistemas-nti"") AS sub",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.032 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,16,"idle in transaction",2019-06-15 11:04:39 -03,2/218,0,LOG,00000,"statement: SELECT * FROM (SELECT * FROM ""public"".""sistemas-nti"") AS sub  LIMIT 30 OFFSET 0",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.032 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,17,"idle in transaction",2019-06-15 11:04:39 -03,2/218,0,LOG,00000,"statement: commit",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.033 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,18,"idle",2019-06-15 11:04:39 -03,2/219,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'sistemas-nti' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:39.034 -03,"postgres","postgres",2925,"::1:55238",5d04faf7.b6d,19,"idle",2019-06-15 11:04:39 -03,2/220,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'sistemas-nti' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.441 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,1,"idle",2019-06-15 11:04:42 -03,2/222,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.441 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,2,"idle",2019-06-15 11:04:42 -03,2/223,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.442 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,3,"idle",2019-06-15 11:04:42 -03,2/224,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.443 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,4,"idle",2019-06-15 11:04:42 -03,2/225,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.443 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,5,"idle",2019-06-15 11:04:42 -03,2/226,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.443 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,6,"idle",2019-06-15 11:04:42 -03,2/227,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.443 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,7,"idle",2019-06-15 11:04:42 -03,2/228,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:42.444 -03,"postgres","dbjrocha",2926,"::1:55240",5d04fafa.b6e,8,"idle",2019-06-15 11:04:42 -03,2/229,0,LOG,00000,"statement: SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+						reltuples::bigint,
+						(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
+					FROM pg_catalog.pg_class c
+					LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+					WHERE c.relkind = 'r'
+					AND nspname='public'
+					ORDER BY c.relname",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.782 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,1,"idle",2019-06-15 11:04:45 -03,2/233,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.782 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,2,"idle",2019-06-15 11:04:45 -03,2/234,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.782 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,3,"idle",2019-06-15 11:04:45 -03,2/235,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.783 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,4,"idle",2019-06-15 11:04:45 -03,2/236,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.783 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,5,"idle",2019-06-15 11:04:45 -03,2/237,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.784 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,6,"idle",2019-06-15 11:04:45 -03,2/238,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.784 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,7,"idle",2019-06-15 11:04:45 -03,2/239,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.785 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,8,"idle",2019-06-15 11:04:45 -03,2/240,0,LOG,00000,"statement: 
+				SELECT
+					a.attname, a.attnum,
+					pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
+					a.atttypmod,
+					a.attnotnull, a.atthasdef, pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) as adsrc,
+					a.attstattarget, a.attstorage, t.typstorage,
+					(
+						SELECT 1 FROM pg_catalog.pg_depend pd, pg_catalog.pg_class pc
+						WHERE pd.objid=pc.oid
+						AND pd.classid=pc.tableoid
+						AND pd.refclassid=pc.tableoid
+						AND pd.refobjid=a.attrelid
+						AND pd.refobjsubid=a.attnum
+						AND pd.deptype='i'
+						AND pc.relkind='S'
+					) IS NOT NULL AS attisserial,
+					pg_catalog.col_description(a.attrelid, a.attnum) AS comment
+				FROM
+					pg_catalog.pg_attribute a LEFT JOIN pg_catalog.pg_attrdef adef
+					ON a.attrelid=adef.adrelid
+					AND a.attnum=adef.adnum
+					LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
+				WHERE
+					a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='Tabela2'
+						AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+						nspname = 'public'))
+					AND a.attnum > 0 AND NOT a.attisdropped
+				ORDER BY a.attnum",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.789 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,9,"idle",2019-06-15 11:04:45 -03,2/241,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'Tabela2' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:04:45.791 -03,"postgres","dbjrocha",2928,"::1:55242",5d04fafd.b70,10,"idle",2019-06-15 11:04:45 -03,2/242,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'Tabela2' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.640 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,1,"idle",2019-06-15 11:05:11 -03,2/246,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.641 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,2,"idle",2019-06-15 11:05:11 -03,2/247,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.641 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,3,"idle",2019-06-15 11:05:11 -03,2/248,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.642 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,4,"idle",2019-06-15 11:05:11 -03,2/249,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.642 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,5,"idle",2019-06-15 11:05:11 -03,2/250,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.642 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,6,"idle",2019-06-15 11:05:11 -03,2/251,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.643 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,7,"idle",2019-06-15 11:05:11 -03,2/252,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.643 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,8,"idle",2019-06-15 11:05:11 -03,2/253,0,LOG,00000,"statement: INSERT INTO ""public"".""Tabela2"" (""num"",""texto"")
+					VALUES ('22222222','opiooiasdjasjdlajsldas
+asdjklasjdlkajsdlkasjdlkasdas
+dasdklasjdlkajsdlkajsdlkasjdlkasda
+sdaslkdjalskdjalskdjlaskjdl')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.644 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,9,"idle",2019-06-15 11:05:11 -03,2/254,0,LOG,00000,"statement: 
+				SELECT
+					a.attname, a.attnum,
+					pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
+					a.atttypmod,
+					a.attnotnull, a.atthasdef, pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) as adsrc,
+					a.attstattarget, a.attstorage, t.typstorage,
+					(
+						SELECT 1 FROM pg_catalog.pg_depend pd, pg_catalog.pg_class pc
+						WHERE pd.objid=pc.oid
+						AND pd.classid=pc.tableoid
+						AND pd.refclassid=pc.tableoid
+						AND pd.refobjid=a.attrelid
+						AND pd.refobjsubid=a.attnum
+						AND pd.deptype='i'
+						AND pc.relkind='S'
+					) IS NOT NULL AS attisserial,
+					pg_catalog.col_description(a.attrelid, a.attnum) AS comment
+				FROM
+					pg_catalog.pg_attribute a LEFT JOIN pg_catalog.pg_attrdef adef
+					ON a.attrelid=adef.adrelid
+					AND a.attnum=adef.adnum
+					LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
+				WHERE
+					a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='Tabela2'
+						AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+						nspname = 'public'))
+					AND a.attnum > 0 AND NOT a.attisdropped
+				ORDER BY a.attnum",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.649 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,10,"idle",2019-06-15 11:05:11 -03,2/255,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'Tabela2' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:11.650 -03,"postgres","dbjrocha",2933,"::1:55244",5d04fb17.b75,11,"idle",2019-06-15 11:05:11 -03,2/256,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'Tabela2' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.096 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,1,"idle",2019-06-15 11:05:24 -03,2/260,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.096 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,2,"idle",2019-06-15 11:05:24 -03,2/261,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.097 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,3,"idle",2019-06-15 11:05:24 -03,2/262,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.098 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,4,"idle",2019-06-15 11:05:24 -03,2/263,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.098 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,5,"idle",2019-06-15 11:05:24 -03,2/264,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.098 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,6,"idle",2019-06-15 11:05:24 -03,2/265,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.098 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,7,"idle",2019-06-15 11:05:24 -03,2/266,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.099 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,8,"idle",2019-06-15 11:05:24 -03,2/267,0,LOG,00000,"statement: INSERT INTO ""public"".""Tabela2"" (""num"",""texto"")
+					VALUES ('333333','tttttttttttttttttttttttwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwe')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:05:24.100 -03,"postgres","dbjrocha",2937,"::1:55246",5d04fb24.b79,9,"idle",2019-06-15 11:05:24 -03,2/268,0,LOG,00000,"statement: SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+						reltuples::bigint,
+						(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
+					FROM pg_catalog.pg_class c
+					LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+					WHERE c.relkind = 'r'
+					AND nspname='public'
+					ORDER BY c.relname",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.679 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,1,"idle",2019-06-15 11:07:28 -03,2/288,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.679 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,2,"idle",2019-06-15 11:07:28 -03,2/289,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.680 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,3,"idle",2019-06-15 11:07:28 -03,2/290,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.681 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,4,"idle",2019-06-15 11:07:28 -03,2/291,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.681 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,5,"idle",2019-06-15 11:07:28 -03,2/292,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.681 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,6,"idle",2019-06-15 11:07:28 -03,2/293,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.681 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,7,"idle",2019-06-15 11:07:28 -03,2/294,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.682 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,8,"idle",2019-06-15 11:07:28 -03,2/295,0,LOG,00000,"statement: begin ",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.682 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,9,"idle in transaction",2019-06-15 11:07:28 -03,2/295,0,LOG,00000,"statement: 
+			SELECT indrelid, indkey
+			FROM pg_catalog.pg_index
+			WHERE indisunique AND indrelid=(
+				SELECT oid FROM pg_catalog.pg_class
+				WHERE relname='logged_actions' AND relnamespace=(
+					SELECT oid FROM pg_catalog.pg_namespace
+					WHERE nspname='public'
+				)
+			) AND indpred IS NULL AND indexprs IS NULL
+			ORDER BY indisprimary DESC LIMIT 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.683 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,10,"idle in transaction",2019-06-15 11:07:28 -03,2/295,0,LOG,00000,"statement: SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
+			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='logged_actions' AND
+			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='public'))
+			AND attnum IN ('1')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.684 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,11,"idle in transaction",2019-06-15 11:07:28 -03,2/295,0,LOG,00000,"statement: commit",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.684 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,12,"idle",2019-06-15 11:07:28 -03,2/296,0,LOG,00000,"statement: SELECT relhasoids FROM pg_catalog.pg_class WHERE relname='logged_actions'
+			AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='public')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.684 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,13,"idle",2019-06-15 11:07:28 -03,2/297,0,LOG,00000,"statement: begin ",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.685 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,14,"idle in transaction",2019-06-15 11:07:28 -03,2/297,0,LOG,00000,"statement: SET TRANSACTION READ ONLY",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.685 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,15,"idle in transaction",2019-06-15 11:07:28 -03,2/297,0,LOG,00000,"statement: SELECT COUNT(*) AS total FROM (SELECT * FROM ""public"".""logged_actions"") AS sub",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.686 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,16,"idle in transaction",2019-06-15 11:07:28 -03,2/297,0,LOG,00000,"statement: rollback",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.686 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,17,"idle",2019-06-15 11:07:28 -03,2/298,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'logged_actions' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:28.687 -03,"postgres","dbjrocha",2952,"::1:55248",5d04fba0.b88,18,"idle",2019-06-15 11:07:28 -03,2/299,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'logged_actions' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.959 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,1,"idle",2019-06-15 11:07:30 -03,2/301,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.959 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,2,"idle",2019-06-15 11:07:30 -03,2/302,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.959 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,3,"idle",2019-06-15 11:07:30 -03,2/303,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.960 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,4,"idle",2019-06-15 11:07:30 -03,2/304,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.960 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,5,"idle",2019-06-15 11:07:30 -03,2/305,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.961 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,6,"idle",2019-06-15 11:07:30 -03,2/306,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.961 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,7,"idle",2019-06-15 11:07:30 -03,2/307,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.961 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,8,"idle",2019-06-15 11:07:30 -03,2/308,0,LOG,00000,"statement: begin ",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.961 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,9,"idle in transaction",2019-06-15 11:07:30 -03,2/308,0,LOG,00000,"statement: 
+			SELECT indrelid, indkey
+			FROM pg_catalog.pg_index
+			WHERE indisunique AND indrelid=(
+				SELECT oid FROM pg_catalog.pg_class
+				WHERE relname='logged_actions' AND relnamespace=(
+					SELECT oid FROM pg_catalog.pg_namespace
+					WHERE nspname='public'
+				)
+			) AND indpred IS NULL AND indexprs IS NULL
+			ORDER BY indisprimary DESC LIMIT 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.963 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,10,"idle in transaction",2019-06-15 11:07:30 -03,2/308,0,LOG,00000,"statement: SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
+			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='logged_actions' AND
+			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='public'))
+			AND attnum IN ('1')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.964 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,11,"idle in transaction",2019-06-15 11:07:30 -03,2/308,0,LOG,00000,"statement: commit",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.964 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,12,"idle",2019-06-15 11:07:30 -03,2/309,0,LOG,00000,"statement: SELECT relhasoids FROM pg_catalog.pg_class WHERE relname='logged_actions'
+			AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='public')",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.964 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,13,"idle",2019-06-15 11:07:30 -03,2/310,0,LOG,00000,"statement: begin ",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.964 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,14,"idle in transaction",2019-06-15 11:07:30 -03,2/310,0,LOG,00000,"statement: SET TRANSACTION READ ONLY",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.965 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,15,"idle in transaction",2019-06-15 11:07:30 -03,2/310,0,LOG,00000,"statement: SELECT COUNT(*) AS total FROM (SELECT * FROM ""public"".""logged_actions"") AS sub",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.965 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,16,"idle in transaction",2019-06-15 11:07:30 -03,2/310,0,LOG,00000,"statement: rollback",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.965 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,17,"idle",2019-06-15 11:07:30 -03,2/311,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'logged_actions' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:30.967 -03,"postgres","dbjrocha",2953,"::1:55250",5d04fba2.b89,18,"idle",2019-06-15 11:07:30 -03,2/312,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'logged_actions' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.681 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,1,"idle",2019-06-15 11:07:39 -03,2/314,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.681 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,2,"idle",2019-06-15 11:07:39 -03,2/315,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.682 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,3,"idle",2019-06-15 11:07:39 -03,2/316,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.683 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,4,"idle",2019-06-15 11:07:39 -03,2/317,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.683 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,5,"idle",2019-06-15 11:07:39 -03,2/318,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.683 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,6,"idle",2019-06-15 11:07:39 -03,2/319,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.683 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,7,"idle",2019-06-15 11:07:39 -03,2/320,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:39.684 -03,"postgres","dbjrocha",2954,"::1:55252",5d04fbab.b8a,8,"idle",2019-06-15 11:07:39 -03,2/321,0,LOG,00000,"statement: SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+						reltuples::bigint,
+						(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
+					FROM pg_catalog.pg_class c
+					LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+					WHERE c.relkind = 'r'
+					AND nspname='public'
+					ORDER BY c.relname",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.304 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,1,"idle",2019-06-15 11:07:43 -03,2/325,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.304 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,2,"idle",2019-06-15 11:07:43 -03,2/326,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.304 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,3,"idle",2019-06-15 11:07:43 -03,2/327,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.305 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,4,"idle",2019-06-15 11:07:43 -03,2/328,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.305 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,5,"idle",2019-06-15 11:07:43 -03,2/329,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.305 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,6,"idle",2019-06-15 11:07:43 -03,2/330,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.306 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,7,"idle",2019-06-15 11:07:43 -03,2/331,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.306 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,8,"idle",2019-06-15 11:07:43 -03,2/332,0,LOG,00000,"statement: 
+				SELECT
+					a.attname, a.attnum,
+					pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
+					a.atttypmod,
+					a.attnotnull, a.atthasdef, pg_catalog.pg_get_expr(adef.adbin, adef.adrelid, true) as adsrc,
+					a.attstattarget, a.attstorage, t.typstorage,
+					(
+						SELECT 1 FROM pg_catalog.pg_depend pd, pg_catalog.pg_class pc
+						WHERE pd.objid=pc.oid
+						AND pd.classid=pc.tableoid
+						AND pd.refclassid=pc.tableoid
+						AND pd.refobjid=a.attrelid
+						AND pd.refobjsubid=a.attnum
+						AND pd.deptype='i'
+						AND pc.relkind='S'
+					) IS NOT NULL AS attisserial,
+					pg_catalog.col_description(a.attrelid, a.attnum) AS comment
+				FROM
+					pg_catalog.pg_attribute a LEFT JOIN pg_catalog.pg_attrdef adef
+					ON a.attrelid=adef.adrelid
+					AND a.attnum=adef.adnum
+					LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
+				WHERE
+					a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='Tabela2'
+						AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
+						nspname = 'public'))
+					AND a.attnum > 0 AND NOT a.attisdropped
+				ORDER BY a.attnum",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.310 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,9,"idle",2019-06-15 11:07:43 -03,2/333,0,LOG,00000,"statement: SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
+		FROM pg_catalog.pg_constraint AS c
+			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
+			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
+		WHERE
+			r.relname = 'Tabela2' AND ns.nspname='public'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:07:43.312 -03,"postgres","dbjrocha",2956,"::1:55254",5d04fbaf.b8c,10,"idle",2019-06-15 11:07:43 -03,2/334,0,LOG,00000,"statement: 
+			SELECT
+				c.oid AS conid, c.contype, c.conname, pg_catalog.pg_get_constraintdef(c.oid, true) AS consrc,
+				ns1.nspname as p_schema, r1.relname as p_table, ns2.nspname as f_schema,
+				r2.relname as f_table, f1.attname as p_field, f1.attnum AS p_attnum, f2.attname as f_field,
+				f2.attnum AS f_attnum, pg_catalog.obj_description(c.oid, 'pg_constraint') AS constcomment,
+				c.conrelid, c.confrelid
+			FROM
+				pg_catalog.pg_constraint AS c
+				JOIN pg_catalog.pg_class AS r1 ON (c.conrelid=r1.oid)
+				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]))
+				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
+				LEFT JOIN (
+					pg_catalog.pg_class AS r2 JOIN pg_catalog.pg_namespace AS ns2 ON (r2.relnamespace=ns2.oid)
+				) ON (c.confrelid=r2.oid)
+				LEFT JOIN pg_catalog.pg_attribute AS f2 ON
+					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)))
+			WHERE
+				r1.relname = 'Tabela2' AND ns1.nspname='public'
+			ORDER BY 1",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.711 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,1,"idle",2019-06-15 11:08:19 -03,2/340,0,LOG,00000,"statement: set datestyle='ISO'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.711 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,2,"idle",2019-06-15 11:08:19 -03,2/341,0,LOG,00000,"statement: select version()",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.711 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,3,"idle",2019-06-15 11:08:19 -03,2/342,0,LOG,00000,"statement: select oid,typname from pg_type",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.712 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,4,"idle",2019-06-15 11:08:19 -03,2/343,0,LOG,00000,"statement: SET client_encoding TO 'UTF-8'",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.712 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,5,"idle",2019-06-15 11:08:19 -03,2/344,0,LOG,00000,"statement: SET bytea_output TO escape",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.712 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,6,"idle",2019-06-15 11:08:19 -03,2/345,0,LOG,00000,"statement: SELECT current_schemas(false) AS search_path",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.713 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,7,"idle",2019-06-15 11:08:19 -03,2/346,0,LOG,00000,"statement: SET SEARCH_PATH TO ""public"",""public""",,,,,,,,,"phpPgAdmin_5.1"
+2019-06-15 11:08:19.713 -03,"postgres","dbjrocha",2961,"::1:55256",5d04fbd3.b91,8,"idle",2019-06-15 11:08:19 -03,2/347,0,LOG,00000,"statement: INSERT INTO ""public"".""Tabela2"" (""num"",""texto"")
+					VALUES ('4444444','9fdfffffffffffff99999999999ddddddddddd99999999999999999999999999ddddddd999999999999999999999999999999999999999999995555555555555555555555555555555ggggggggggggggggggggggggggggggggggggggggggggggllllllllllllllllllllllllllllllllllllllllllllllllllllllllddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')",,,,,,,,,"phpPgAdmin_5.1"
